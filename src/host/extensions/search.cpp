@@ -261,7 +261,7 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
 
     /* NtQuerySystemInformation stopped giving us STATUS_INFO_LENGTH_MISMATCH. */
     if (!NT_SUCCESS(status)) {
-        LOG(ERROR) << "Error opening object for pbo search";
+        //LOG(ERROR) << "Error opening object for pbo search";
         free(handleInfo);
         return _active_pbo_list;
     }
@@ -275,7 +275,7 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
 
         /* Check if this handle belongs to the PID the user specified. */
         if (handle.ProcessId != pid) {
-            LOG(INFO) << "PID MISMATCH: " << (DWORD)handle.ProcessId << " != " << (DWORD)pid;
+            //LOG(INFO) << "PID MISMATCH: " << (DWORD)handle.ProcessId << " != " << (DWORD)pid;
             continue;
         }
 
@@ -290,7 +290,7 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
             0,
             0
         ))) {
-            LOG(INFO) << "FAILED TO DUPLICATE OJBECT";
+            //LOG(INFO) << "FAILED TO DUPLICATE OJBECT";
             continue;
         }
 
@@ -308,7 +308,7 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
             0x1000,
             NULL
         ))) {
-            LOG(INFO) << "FAILED TO QUERY OJBECT";
+            //LOG(INFO) << "FAILED TO QUERY OJBECT";
             CloseHandle(dupHandle);
             continue;
         }
@@ -316,7 +316,7 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
         /* Query the object name (unless it has an access of
         0x0012019f, on which NtQueryObject could hang. */
         if (handle.GrantedAccess == 0x0012019f) {
-            LOG(INFO) << "ACCESS == 0x0012019f";
+            //LOG(INFO) << "ACCESS == 0x0012019f";
             free(objectTypeInfo);
             CloseHandle(dupHandle);
             continue;
@@ -358,12 +358,12 @@ std::vector<std::wstring> intercept::search::plugin_searcher::generate_pbo_list(
             std::wstring_view tmp_type(objectTypeInfo->Name.Buffer);
             std::wstring_view tmp_name(objectName.Buffer);
 
-            LOG(INFO) << "File: " << object_name;
+            //LOG(INFO) << "File: " << object_name;
             if (tmp_type == L"File"sv && tmp_name.find(L".pbo"sv) != std::string::npos) {
                 wchar_t buffer[MAX_PATH];
                 GetFinalPathNameByHandleW(dupHandle, buffer, sizeof(buffer), VOLUME_NAME_DOS);
 
-                LOG(INFO) << "Pbo: " << buffer;
+                //LOG(INFO) << "Pbo: " << buffer;
                 _active_pbo_list.push_back(std::wstring(buffer));
             }
         }
