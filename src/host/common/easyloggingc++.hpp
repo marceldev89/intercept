@@ -10,7 +10,7 @@
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 
 #define TRACE(...) SPDLOG_TRACE(logging::logfile, __VA_ARGS__)
-#define TRACE_IF(flag, ...) SPDLOG_TRACE(logging::logfile, flag, __VA_ARGS__))
+#define TRACE_IF(flag, ...) SPDLOG_TRACE(logging::logfile, flag, __VA_ARGS__)
 
 #define INFO logging::logfile->info
 #define DEBUG logging::logfile->debug
