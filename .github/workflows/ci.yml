@@ -21,29 +21,29 @@ jobs:
           name: 'mod'
           path: releases/1.0.0/@intercept
 
-  extension-linux:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: git checkout
-        uses: actions/checkout@v2
+  # extension-linux:
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - name: git checkout
+  #       uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y g++-8-multilib
+  #     - name: Install dependencies
+  #       run: |
+  #         sudo dpkg --add-architecture i386
+  #         sudo apt-get update
+  #         sudo apt-get install -y g++-8-multilib
 
-      - name: Build Linux 32 bit
-        run: mkdir build-linux32 && cd build-linux32 && cmake -DCMAKE_BUILD_TYPE=Release .. && make
-        env:
-          CC: gcc-8
-          CXX: g++-8
+  #     - name: Build Linux 32 bit
+  #       run: mkdir build-linux32 && cd build-linux32 && cmake -DCMAKE_BUILD_TYPE=Release .. && make
+  #       env:
+  #         CC: gcc-8
+  #         CXX: g++-8
 
-      - name: Upload Linux 32 bit
-        uses: actions/upload-artifact@v1
-        with:
-          name: intercept.so
-          path: build-linux32/src/host/intercept_dll/intercept.so
+  #     - name: Upload Linux 32 bit
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: intercept.so
+  #         path: build-linux32/src/host/intercept_dll/intercept.so
 
   extension-windows:
     runs-on: windows-2019
@@ -51,17 +51,17 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v2
 
-      - name: Build Windows 32 bit
-        run: mkdir build-win32 && cd build-win32 && cmake -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" -A Win32 .. && cmake --build . --config Release
+      # - name: Build Windows 32 bit
+      #   run: mkdir build-win32 && cd build-win32 && cmake -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" -A Win32 .. && cmake --build . --config Release
 
       - name: Build Windows 64 bit
         run: mkdir build-win64 && cd build-win64 && cmake -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019" -A x64 .. && cmake --build . --config Release
 
-      - name: Upload Windows 32 bit
-        uses: actions/upload-artifact@v1
-        with:
-          name: intercept.dll
-          path: build/win32/intercept/Release/intercept.dll
+      # - name: Upload Windows 32 bit
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: intercept.dll
+      #     path: build/win32/intercept/Release/intercept.dll
 
       - name: Upload Windows 64 bit
         uses: actions/upload-artifact@v1
@@ -72,7 +72,7 @@ jobs:
   package:
     runs-on: ubuntu-18.04
     needs:
-      - extension-linux
+      # - extension-linux
       - extension-windows
       - mod
     steps:
@@ -82,17 +82,17 @@ jobs:
           name: 'mod'
           path: '@intercept'
 
-      - name: Download Linux 32 bit
-        uses: actions/download-artifact@v1
-        with:
-          name: intercept.so
-          path: '@intercept'
+      # - name: Download Linux 32 bit
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: intercept.so
+      #     path: '@intercept'
 
-      - name: Download Windows 32 bit
-        uses: actions/download-artifact@v1
-        with:
-          name: intercept.dll
-          path: '@intercept'
+      # - name: Download Windows 32 bit
+      #   uses: actions/download-artifact@v1
+      #   with:
+      #     name: intercept.dll
+      #     path: '@intercept'
 
       - name: Download Windows 64 bit
         uses: actions/download-artifact@v1
